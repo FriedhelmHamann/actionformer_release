@@ -360,10 +360,12 @@ class PtTransformer(nn.Module):
         # return loss during training
         if self.training:
             # generate segment/lable List[N x 2] / List[N] with length = B
-            assert video_list[0]['segments'] is not None, "GT action labels does not exist"
-            assert video_list[0]['labels'] is not None, "GT action labels does not exist"
-            gt_segments = [x['segments'].to(self.device) for x in video_list]
-            gt_labels = [x['labels'].to(self.device) for x in video_list]
+            #assert video_list[0]['segments'] is not None, "GT action labels does not exist"
+            #assert video_list[0]['labels'] is not None, "GT action labels does not exist" 
+            gt_segments = [x['segments'] if x['segments'] is not None else torch.Tensor() for x in video_list]
+            gt_segments = [x.to(self.device) for x in gt_segments]
+            gt_labels = [x['labels'] if x['labels'] is not None else torch.Tensor() for x in video_list]
+            gt_labels = [x.to(self.device) for x in gt_labels]
 
             # compute the gt labels for cls & reg
             # list of prediction targets
