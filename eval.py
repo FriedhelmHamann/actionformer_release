@@ -76,6 +76,12 @@ def main(args):
     model.load_state_dict(checkpoint['state_dict_ema'])
     del checkpoint
 
+    total_params = sum(p.numel() for p in model.parameters())
+    trainable_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+
+    print(f'Total params: {total_params}')
+    print(f'Trainable params: {trainable_params}')
+
     # set up evaluator
     det_eval, output_file = None, None
     if not args.saveonly:
